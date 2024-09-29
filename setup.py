@@ -7,10 +7,10 @@ with open("./requirements/requirements.in", "r") as req_file:
 REQUIREMENTS.append("helper_max")
 
 setuptools.setup(
-    name="{PROJECT_NAME}",
+    name="{strava_uwh_analyser}",
     version='0.0.1',
     description='your description HERE',
-    url='https://github.com/{USER}/{PROJECT_NAME}',
+    url='https://github.com/{USER}/{strava_uwh_analyser}',
     author='Max Campbell',
     author_email='maxcampbe@gmail.com',
     package_dir={"": "src"},
@@ -25,7 +25,7 @@ setuptools.setup(
     package_data={"": ["*"]},
     entry_points={
         'console_scrips': [
-            'name_of_task = {PROJECT_NAME}.main:main'
+            'name_of_task = {strava_uwh_analyser}.main:main'
         ]
     }
 )

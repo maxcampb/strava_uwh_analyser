@@ -1,4 +1,4 @@
-from PROJECT_NAME.utils import *
+from strava_uwh_analyser.utils import *
 
 
 class BaseVariables:
