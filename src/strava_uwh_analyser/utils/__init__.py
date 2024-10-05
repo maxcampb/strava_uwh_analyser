@@ -1,5 +1,13 @@
 import argparse
+import datetime
 import logging
+
+from strava_uwh_analyser.utils.helpers.strava_handler import StravaHandler
+from strava_uwh_analyser.utils.helpers.helper_functions import get_logging_level
+
+
+def _2date(date_str: str) -> datetime.date:
+    return datetime.datetime.strptime(date_str)
 
 
 def parse_args() -> argparse.Namespace:
@@ -10,6 +18,13 @@ def parse_args() -> argparse.Namespace:
         help="Environment you want to run process in",
         default="dev",
         choices=["tests", "prod", "dev"]
+    )
+    parser.add_argument(
+        "--run-date",
+        dest="run_date",
+        help="Environment you want to run process in",
+        default=datetime.date.today(),
+        type=datetime.date
     )
 
     args, _ = parser.parse_known_args()
@@ -27,16 +42,11 @@ def parse_args() -> argparse.Namespace:
 parsed_args = parse_args()
 
 
-def set_logging_level(
-        logger: logging.Logger,
-        logging_level: parsed_args.logging_level,
-) -> None:
-    if logging_level == "debug":
-        logger.setLevel(logging.DEBUG)
-    elif logging_level == "info":
-        logger.setLevel(logging.INFO)
-    else:
-        f"Logging level {logging_level} is not implemented"
+logging.basicConfig(
+        level=get_logging_level(logging_level=parsed_args.logging_level),  # Set the minimum logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  # Format of log messages
+)
 
+STRAVA_HANDLER = StravaHandler()
 
-__all__ = ["parsed_args"]
+__all__ = ["parsed_args", "STRAVA_HANDLER"]

@@ -5,6 +5,16 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Local folders
+local_data/
+**/reports/**
+
+
+
+.idea
+.xml
+.iml
+
 # C extensions
 *.so
 
