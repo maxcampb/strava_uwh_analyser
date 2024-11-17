@@ -45,7 +45,7 @@ class AthletesExtractor(StravaExtractor):
         return athlete_names
 
     def extract(self) -> Dict[str, list]:
-        self.logger.debug("Extracting athletes")
+        self.logger.info("Extracting athletes")
         athletes = {}
         for athlete_name in self.athlete_names:
             self.client = self.strava_handler.get_configured_athlete_client(athlete_name)
@@ -54,7 +54,7 @@ class AthletesExtractor(StravaExtractor):
         return athletes
 
     def transform(self, data: Dict[str, list]) -> Dict[str, ProcessedAthlete]:
-        self.logger.debug("Transforming athletes")
+        self.logger.info("Transforming athletes")
         athletes_data = {}
         for athlete_name, athlete in data.items():
             athletes_data[athlete_name] = (

@@ -1,5 +1,6 @@
 import abc
-from typing import Union
+from typing import Union, Dict, Optional
+from pathlib import Path
 import pandas as pd
 from strava_uwh_analyser.utils import *
 from strava_uwh_analyser.utils.helpers.email_sender import EmailSender
@@ -33,6 +34,9 @@ class StravaExtractor(abc.ABC):
 
 class BaseReport(abc.ABC):
     base_variables = BaseVariables()
+    report_name = None
+    DATA_DIRECTORY = Path(__file__).parents[3] / "local_data/report_data"
+    EMAIL_RECIPIENTS: Optional[Dict[str, str]] = None
 
     def __init__(
         self,
@@ -41,17 +45,32 @@ class BaseReport(abc.ABC):
     ):
         self.save_locally = save_locally
         self.send_report_email = send_report_email
+        if send_report_email:
+            if self.EMAIL_RECIPIENTS is None:
+                raise ValueError(
+                    "EMAIL_RECIPIENTS must be defined as the report class attribute if send_report_email is True"
+                )
 
     @abc.abstractmethod
-    def generate_report(self):
+    def generate_report(self) -> Union[pd.DataFrame, Dict[str, pd.DataFrame]]:
         pass
 
-    def upload(self):
-        pass
+    @property
+    def report_file_name(self):
+        return self.DATA_DIRECTORY / f"{self.report_name}_{self.base_variables.run_date}_report.csv"
+
+    def save_report_locally(self, report_outputs: Union[pd.DataFrame, Dict[str, pd.DataFrame]]):
+        if isinstance(report_outputs, dict):
+            for output_name, output in report_outputs.items():
+                output.to_csv(self.DATA_DIRECTORY / f"{output_name}_{self.base_variables.run_date}_report.csv")
+        elif isinstance(report_outputs, pd.DataFrame):
+            report_outputs.to_csv(self.report_file_name)
+        else:
+            raise ValueError("report_outputs must be a pandas DataFrame or a dictionary")
 
     def run(self):
         report = self.generate_report()
         if self.save_locally:
-            self.upload()
+            self.save_report_locally(report_outputs=report)
         if self.send_report_email:
             EmailSender(report_data=report).send_email()

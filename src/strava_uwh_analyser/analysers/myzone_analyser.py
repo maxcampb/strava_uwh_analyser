@@ -108,7 +108,7 @@ class MyZoneAnalyser:
             raise ValueError("This method only works for a heart rate timeseries for a single athlete and activity")
         df = self.interpolate_missing_times(df=df)
         df = self.add_myzone_data_to_timeseries(df=df)
-        self.logging.info(f"Computing MyZone zones and meps for {df['athlete_name'].iloc[0]}")
+        self.logger.info(f"Computing MyZone zones and meps for {df['athlete_name'].iloc[0]}")
         zone_minutes = {
                 zone: round(df.loc[df["heart_rate_zone"] == zone.lower()].shape[0] / 60, 2)
                 for zone in self.HEART_RATE_ZONES

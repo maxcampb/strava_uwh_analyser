@@ -75,7 +75,7 @@ class ActivitiesExtractor(StravaExtractor):
         return activity_data
 
     def extract_heart_rate_data(self, activity_id: int) -> pd.DataFrame:
-        #TODO: make sure that these are in seconds
+        # Time stream is in seconds  https://developers.strava.com/docs/reference/#api-models-TimeStream
         try:
             activity_streams = self.client.get_activity_streams(
                 activity_id, types=["heartrate", "time"], resolution="high"
@@ -90,7 +90,7 @@ class ActivitiesExtractor(StravaExtractor):
         return heart_rate_df
 
     def transform(self, data: Dict[str, List[ProcessedActivityData]]) -> List[ProcessedActivityData]:
-        self.logger.debug("Transforming activities data")
+        self.logger.info("Transforming activities data")
 
         return [
             activity

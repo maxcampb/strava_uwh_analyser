@@ -6,5 +6,6 @@ class GBUWHReportRunner:
     @classmethod
     def run(cls):
         GBUWHReport(
-            send_report_email=True
-        ).generate_report()
+            save_locally=True,
+            send_report_email=False
+        ).run()

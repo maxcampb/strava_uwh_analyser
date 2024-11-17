@@ -7,7 +7,7 @@ from strava_uwh_analyser.utils.helpers.helper_functions import get_logging_level
 
 
 def _2date(date_str: str) -> datetime.date:
-    return datetime.datetime.strptime(date_str)
+    return datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
 
 
 def parse_args() -> argparse.Namespace:
@@ -22,9 +22,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--run-date",
         dest="run_date",
-        help="Environment you want to run process in",
+        help="The date you want to run the report for",
         default=datetime.date.today(),
-        type=datetime.date
+        type=_2date
     )
 
     args, _ = parser.parse_known_args()

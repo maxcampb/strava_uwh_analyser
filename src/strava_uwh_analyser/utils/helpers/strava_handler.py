@@ -15,8 +15,8 @@ load_dotenv(Path.home() / ".env")
 class StravaHandler:
     STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
     STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
+    CREDENTIALS_FILEPATH = os.environ.get("ATHLETE_CREDENTIALS_PATH")
     client = Client()
-    CREDENTIALS_FILEPATH = Path(__file__).parents[4] / "local_data/athlete_credentials.json"
 
     def __init__(self):
         self.credentials = self.get_json_credentials()
@@ -82,5 +82,5 @@ class StravaHandler:
 
 if __name__ == "__main__":
     StravaHandler.get_authorization_url()
-    StravaHandler.get_token_response("3c53d1e6fe9836cd092ff8436a4ec77d9d07d08c")
-    "http://localhost:8282/authorized?state=&code=3c53d1e6fe9836cd092ff8436a4ec77d9d07d08c&scope=read,activity:read"
+    StravaHandler.get_token_response("XXXXXXXXXXXXXXXXXX")
+    "http://localhost:8282/authorized?state=&code=XXXXXXXXXXXXXXXXXX&scope=read,activity:read"
