@@ -73,4 +73,9 @@ class BaseReport(abc.ABC):
         if self.save_locally:
             self.save_report_locally(report_outputs=report)
         if self.send_report_email:
-            EmailSender(report_data=report).send_email()
+            EmailSender(
+                report_data=report,
+                report_name=self.report_name,
+                to_addresses=self.EMAIL_RECIPIENTS,
+                date=self.base_variables.run_date,
+            ).send_email()
