@@ -40,6 +40,8 @@ pytz==2024.2
     # via
     #   pandas
     #   stravalib
+pyyaml==6.0.2
+    # via -r requirements/requirements.in
 requests==2.32.3
     # via stravalib
 six==1.16.0

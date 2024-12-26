@@ -14,7 +14,7 @@ class ReportTemplate(BaseReport):
 
     ATHLETE_NAMES: List[str] = [
         "athlete_1",
-        "athelete_2"
+        "athlete_2"
     ]
 
     def __init__(

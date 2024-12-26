@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Tuple
 import datetime
 import pandas as pd
 from strava_uwh_analyser.utils.base_classes import StravaExtractor
@@ -11,6 +11,7 @@ class ProcessedActivityData:
             self,
             raw_strava_activity,
             heart_rate_df: pd.DataFrame,
+            distance_df: pd.DataFrame,
             athlete_name: str,
     ):
         self.athlete_id = raw_strava_activity.athlete.id
@@ -23,6 +24,7 @@ class ProcessedActivityData:
         self.distance = raw_strava_activity.distance / 1000
         self.sport_type = raw_strava_activity.sport_type.root
         self.heart_rate_data = heart_rate_df
+        self.distance_data = distance_df
 
 
 @add_logger
@@ -63,23 +65,24 @@ class ActivitiesExtractor(StravaExtractor):
     def extract_from_activities_iterator(self, activities, athlete_name) -> List[ProcessedActivityData]:
         activity_data = []
         for activity in activities:
-            heart_rate_df = self.extract_heart_rate_data(activity_id=activity.id)
+            heart_rate_df, distance_df = self.extract_timeseries_data_streams(activity_id=activity.id)
             activity_data.append(
                 ProcessedActivityData(
                     raw_strava_activity=activity,
                     heart_rate_df=heart_rate_df,
+                    distance_df=distance_df,
                     athlete_name=athlete_name,
                 )
             )
 
         return activity_data
 
-    def extract_heart_rate_data(self, activity_id: int) -> pd.DataFrame:
+    def extract_timeseries_data_streams(self, activity_id: int) -> Tuple[pd.DataFrame, pd.DataFrame]:
         # Time stream is in seconds  https://developers.strava.com/docs/reference/#api-models-TimeStream
+        activity_streams = self.client.get_activity_streams(
+            activity_id, types=["heartrate", "distance", "time"], resolution="high"
+        )
         try:
-            activity_streams = self.client.get_activity_streams(
-                activity_id, types=["heartrate", "time"], resolution="high"
-            )
             heart_rate_df = pd.DataFrame({
                 "heart_rate": activity_streams["heartrate"].data,
                 "seconds_elapsed": activity_streams["time"].data
@@ -87,7 +90,16 @@ class ActivitiesExtractor(StravaExtractor):
         except Exception:
             heart_rate_df = None
 
-        return heart_rate_df
+        try:
+            distance_df = pd.DataFrame({
+                "distance_km": activity_streams["distance"].data,
+                "seconds_elapsed": activity_streams["time"].data
+            })
+            distance_df["distance_km"] = distance_df["distance_km"] / 1000
+        except Exception:
+            distance_df = None
+
+        return heart_rate_df, distance_df
 
     def transform(self, data: Dict[str, List[ProcessedActivityData]]) -> List[ProcessedActivityData]:
         self.logger.info("Transforming activities data")

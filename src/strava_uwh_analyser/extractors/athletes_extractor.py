@@ -2,7 +2,7 @@ from typing import Optional, List, Dict
 from stravalib.model import DetailedAthlete
 
 from strava_uwh_analyser.utils.base_classes import StravaExtractor
-from strava_uwh_analyser.utils.athlete_data import AthleteMaxHeartRates
+from strava_uwh_analyser.utils.helpers.athlete_attributes_config_loader import AthleteAttributesConfigLoader
 from strava_uwh_analyser.utils.helpers.helper_functions import add_logger
 
 
@@ -13,26 +13,33 @@ class ProcessedAthlete:
         athlete_name: str,
         athlete_id: str,
         athlete_details: DetailedAthlete,
-        max_heart_rate: Optional[float] = None,
+        athlete_attributes: Optional[dict] = None,
     ):
         self.athlete_name = athlete_name
         self.athlete_id = athlete_id
         self.athlete_details = athlete_details
-        if max_heart_rate is None:
-            self.max_heart_rate = AthleteMaxHeartRates[athlete_name.upper()].value
-        else:
-            self.max_heart_rate = max_heart_rate
+        if athlete_attributes is not None:
+            self.max_heart_rate = athlete_attributes.pop("max_heart_rate")
+        self.athlete_attributes = athlete_attributes
 
 
 @add_logger
 class AthletesExtractor(StravaExtractor):
 
+    athlete_attributes = {}
+
     def __init__(
             self,
             athlete_names: Optional[List[str]] = None,
+            load_athlete_configs: bool = False,
     ):
         self.client = None
         self.athlete_names = self.get_athletes_names(athlete_names=athlete_names)
+        if load_athlete_configs:
+            self.athlete_attributes = (
+                AthleteAttributesConfigLoader()
+                .get_athletes_attribute_dict(athlete_names=athlete_names)
+            )
 
     def get_athletes_names(self, athlete_names) -> list:
         if athlete_names is None:
@@ -62,7 +69,7 @@ class AthletesExtractor(StravaExtractor):
                     athlete_name=athlete_name,
                     athlete_id=str(athlete.id),
                     athlete_details=athlete,
-                    max_heart_rate=athlete.max_heartrate
+                    athlete_attributes=self.athlete_attributes.get(athlete_name, None)
                 )
             )
 
