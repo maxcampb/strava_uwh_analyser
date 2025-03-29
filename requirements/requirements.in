@@ -2,3 +2,4 @@ stravalib
 python-dotenv
 pandas
 pyyaml
+pytest

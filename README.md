@@ -10,7 +10,7 @@ This package allows users to upload Strava activities and analyse them for under
 1. Setup a python interpreter running python version 3.10
 2. Install invoke, piptools
     ```bash
-    pip install invoke piptools
+    pip install invoke pip-tools
     ```
 3. Install requirements
     ```bash

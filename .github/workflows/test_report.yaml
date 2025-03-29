@@ -1,4 +1,4 @@
-name: "Test GB report"
+name: "Install package"
 on:
   push:
     branches: "main"
@@ -39,38 +39,9 @@ jobs:
           name: python-env
           path: python-env.tar.gz
 
-  run-gb-report:
-    runs-on: ubuntu-latest
-    needs: build-image
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Download python environment
-        uses: actions/download-artifact@v4
-        with:
-          name: python-env
-          path: .
-
-      - name: Extract Python environment
-        run: |
-          tar -xzf python-env.tar.gz
-
-      - name: Run report
-        run: |
-          source venv/bin/activate
-          run_gb_uwh_report --debug-email-recipients
-        env:
-          STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
-          STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
-          MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
-          MAILGUN_API_URL: ${{ secrets.MAILGUN_API_URL }}
-          MAILGUN_SENDER_ADDRESS: ${{ secrets.MAILGUN_SENDER_ADDRESS }}
-          ATHLETES_CREDENTIALS: ${{ secrets.ATHLETES_CREDENTIALS }}
-
   cleanup:
     runs-on: ubuntu-latest
-    needs: run-gb-report
+    needs: build-image
     if: always()
     steps:
       - uses: geekyeggo/delete-artifact@v5

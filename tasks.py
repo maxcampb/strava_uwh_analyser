@@ -18,7 +18,8 @@ def build(c):
 
 @task
 def rebuild(c):
-    c.run("inv req_compile && inv build")
+    req_compile(c)
+    build(c)
 
 
 @task

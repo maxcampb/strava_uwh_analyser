@@ -23,11 +23,12 @@ class ProcessedAthlete:
 
     def _process_athlete_configs(self, athlete_configs: Optional[dict]):
         self.athlete_configs = athlete_configs
-        for field in self.PRIMARY_CONFIG_FIELDS:
-            try:
-                setattr(self, field, self.athlete_configs[field])
-            except KeyError:
-                setattr(self, field, None)
+        if self.athlete_configs is not None:
+            for field in self.PRIMARY_CONFIG_FIELDS:
+                try:
+                    setattr(self, field, self.athlete_configs[field])
+                except KeyError:
+                    setattr(self, field, None)
 
 
 @add_logger
