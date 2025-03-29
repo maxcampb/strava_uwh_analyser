@@ -26,7 +26,7 @@ setuptools.setup(
     entry_points={
         # Add your report here
         'console_scripts': [
-            'run_gb_uwh_report = strava_uwh_analyser.main:run_gb_uwh_report'
+            'run_example_uwh_report = strava_uwh_analyser.main:run_example_uwh_report'
         ]
     }
 )

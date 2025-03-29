@@ -95,7 +95,7 @@ class MyZoneAnalyser:
         df = df.set_index("time_elapsed")
         df = df.resample("s").asfreq()
         df[["heart_rate", "seconds_elapsed"]] = df[["heart_rate", "seconds_elapsed"]].interpolate(method="linear")
-        df = df.fillna(method='ffill')
+        df = df.ffill()
         df = df.reset_index(drop=True)
         return df
 

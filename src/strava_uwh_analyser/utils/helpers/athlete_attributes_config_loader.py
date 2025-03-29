@@ -5,7 +5,7 @@ import yaml
 
 class AthleteAttributesConfigLoader:
 
-    ATHLETE_CONFIG_PATH = Path(__file__).parents[4] / "local_data/athlete_configs/athlete_attributes_config.yaml"
+    ATHLETE_CONFIG_PATH = Path(__file__).parents[2] / "configs/athlete_attributes_config.yaml"
 
     def __init__(self):
         self.athlete_attributes_config = self.load_config()

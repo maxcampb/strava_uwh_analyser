@@ -15,22 +15,19 @@ load_dotenv(Path.home() / ".env")
 class StravaHandler:
     STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
     STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
-    CREDENTIALS_FILEPATH = os.environ.get("ATHLETE_CREDENTIALS_PATH")
+    CREDENTIALS = os.environ.get("ATHLETES_CREDENTIALS")
     client = Client()
 
     def __init__(self):
-        self.credentials = self.get_json_credentials()
+        self.credentials = json.loads(self.CREDENTIALS)
         self.update_credentials()
-        self.save_credentials_locally()
-
-    @classmethod
-    def get_json_credentials(cls):
-        with open(cls.CREDENTIALS_FILEPATH) as f:
-            d = json.load(f)
-        return d
 
     def update_credentials(self):
         self.logger.info("Updating credentials ...")
+        print(self.credentials)
+        self.logger.info(self.credentials)
+        if isinstance(self.credentials, str):
+            self.credentials = json.loads(self.credentials)
         for athlete_name, athlete_credentials in self.credentials.items():
             if athlete_credentials is not None:
                 if time.time() > athlete_credentials["expires_at"]:
@@ -74,13 +71,9 @@ class StravaHandler:
 
         return client
 
-    def save_credentials_locally(self):
-        json_credentials = json.dumps(self.credentials)
-        with open(self.CREDENTIALS_FILEPATH, "w") as f:
-            f.write(json_credentials)
-
 
 if __name__ == "__main__":
     StravaHandler.get_authorization_url()
     StravaHandler.get_token_response("XXXXXXXXXXXXXXXXXX")
-    "http://localhost:8282/authorized?state=&code=XXXXXXXXXXXXXXXXXX&scope=read,activity:read"
+    # URL Looks like this.
+    # "http://localhost:8282/authorized?state=&code=XXXXXXXXXXXXXXXXXX&scope=read,activity:read"

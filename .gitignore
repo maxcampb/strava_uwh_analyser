@@ -7,8 +7,6 @@ __pycache__/
 
 # Local folders
 local_data/
-**/reports/**
-
 
 
 .idea

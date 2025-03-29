@@ -1,9 +1,9 @@
-from strava_uwh_analyser.runners.gb_uwh_report_runner import GBUWHReportRunner
+from strava_uwh_analyser.runners.example_uwh_report_runner import ExampleUWHReportRunner
 
 
-def run_gb_uwh_report():
-    GBUWHReportRunner.run()
+def run_example_uwh_report():
+    ExampleUWHReportRunner.run()
 
 
 if __name__ == "__main__":
-    run_gb_uwh_report()
+    run_example_uwh_report()
