@@ -1,7 +1,16 @@
 
 # Strava UWH Analyser
 
-This package allows users to upload Strava activities and analyse them for underwater hockey (UWH) specific metrics. 
+This package allows users to extract STRAVA activities, analyse them for underwater hockey (UWH) specific metrics, and then send them to coaches or players (e.g. via email). It follows an Extract-Transform-Load (ETL) structure.
+
+Some general repository definitions:
+
+* Extractors: used to extract data from a source (often from STRAVA)
+* Processors: used to process data and return UWH specific metrics
+* Reports: an class that contains the full infrastructure for running a report, including an orchestrator run method.
+* Runners: Wrapper class which is designed to run a particular report.
+
+ Contributions to repository are encouraged.
 
 **WHEN MAKING CHANGES TO THIS REPO, do not commit directly to main branch. Instead commit to another branch and open a PR.**
 
@@ -28,7 +37,7 @@ This package allows users to upload Strava activities and analyse them for under
 Where, ATHLETES_CREDENTIALS should be specified as a JSON str in your .env, for examples:
 
 ```text
-ATHLETES_CREDENTIALS="{\"max_campbell\": {\"access_token\": \"ahshw892303\", \"refresh_token\": \"osiw9o223os9\", \"expires_at\": 173375}, \"james_christen\": {\"access_token\": \"ahshw892303\", \"refresh_token\": \"osiw9o223os9\", \"expires_at\": 173375}}\"
+ATHLETES_CREDENTIALS="{\"max_campbell\": {\"access_token\": \"ahshw892303\", \"refresh_token\": \"osiw9o223os9\", \"expires_at\": 173375}, \"james_smith\": {\"access_token\": \"ahshw892303\", \"refresh_token\": \"osiw9o223os9\", \"expires_at\": 173375}}\"
 ```
 If you are missing athlete credentials just change the list of athletes instanced in your report.
 
